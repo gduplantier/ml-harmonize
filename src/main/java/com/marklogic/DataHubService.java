@@ -2,6 +2,8 @@ package com.marklogic;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,15 @@ import com.marklogic.hub.flow.RunFlowResponse;
 import com.marklogic.hub.flow.impl.FlowRunnerImpl;
 import com.marklogic.hub.impl.HubConfigImpl;
 
+/*
+ * Service that wraps the Data Hub functionality
+ */
+
 @Service
 public class DataHubService {
-	
+    
+	private final Logger logger = LoggerFactory.getLogger(DataHubService.class);
+
 	@Autowired
 	HubConfigImpl hubConfig;
 	
@@ -38,8 +46,13 @@ public class DataHubService {
     	    inputs.setJobId(jobId);
 
     	    response = flowRunner.runFlow(inputs);
+    	} else {
+    		logger.warn("runFlow missing parameters, flowName: " + flowName + "steps: " + steps);
     	}
     	return response;
     }
 
+    public String getHost() {
+		return host;
+	}
 }
